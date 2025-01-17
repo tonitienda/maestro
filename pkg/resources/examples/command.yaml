@@ -1,0 +1,6 @@
+kind: Command
+metadata:
+  name: my_command
+spec:
+  run:
+    - echo "Hello, World!"
