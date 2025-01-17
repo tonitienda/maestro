@@ -32,9 +32,8 @@ jobs:
 
       - name: Generate Coverage Badge
         run: |
-          go install github.com/badges/shields-badge-cli@latest
           coverage=$(go tool cover -func=coverage/coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
-          shields-badge coverage $coverage coverage "https://img.shields.io/badge/Coverage-${coverage}%25-brightgreen" > coverage/badge.svg
+          curl -o coverage/badge.svg "https://img.shields.io/badge/Coverage-${coverage}%25-brightgreen"
 
       - name: Upload Coverage and Badge
         uses: actions/upload-artifact@v4
