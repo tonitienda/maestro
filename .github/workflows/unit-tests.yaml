@@ -37,7 +37,7 @@ jobs:
           shields-badge coverage $coverage coverage "https://img.shields.io/badge/Coverage-${coverage}%25-brightgreen" > coverage/badge.svg
 
       - name: Upload Coverage and Badge
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: coverage
           path: coverage/
@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Download Coverage Badge
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: coverage
 
