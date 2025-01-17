@@ -1,14 +1,68 @@
-# Run the projects unit tests
 name: Unit Tests
-on: [push]
+on: [push, pull_request]
+
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: "1.22.1"
-      - name: Run unit tests
-        run: go test ./...
+
+      - name: Install Dependencies
+        run: go mod tidy
+
+      - name: Run Unit Tests with Coverage
+        run: |
+          mkdir -p coverage
+          go test ./... -coverprofile=coverage/coverage.out
+
+      - name: Enforce Coverage Threshold
+        run: |
+          coverage=$(go tool cover -func=coverage/coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
+          echo "Coverage: $coverage%"
+          if (( $(echo "$coverage < 80.0" | bc -l) )); then
+            echo "Coverage ($coverage%) is below the threshold (80%)"
+            exit 1
+          fi
+
+      - name: Generate Coverage Badge
+        run: |
+          go install github.com/badges/shields-badge-cli@latest
+          coverage=$(go tool cover -func=coverage/coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
+          shields-badge coverage $coverage coverage "https://img.shields.io/badge/Coverage-${coverage}%25-brightgreen" > coverage/badge.svg
+
+      - name: Upload Coverage and Badge
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: coverage/
+
+  update-readme:
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Download Coverage Badge
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage
+
+      - name: Update README.md
+        run: |
+          badge_url=$(cat coverage/badge.svg | base64 | tr -d '\n')
+          sed -i '/## Coverage Badge/c\![Coverage](data:image/svg+xml;base64,'"$badge_url"')' README.md
+
+      - name: Commit and Push Badge Update
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          git add README.md
+          git commit -m "Update coverage badge"
+          git push
