@@ -1,0 +1,8 @@
+#!/bin/sh
+echo "Running pre-commit hooks..."
+gofmt -s -w .
+goimports -w .
+staticcheck ./... || exit 1
+gosec ./...
+go test ./... || exit 1
+echo "Pre-commit checks passed!"

@@ -1,0 +1,27 @@
+#!/bin/sh
+
+echo "Installing Go tools..."
+
+go install golang.org/x/tools/cmd/goimports@latest
+go install honnef.co/go/tools/cmd/staticcheck@latest
+go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.bashrc
+echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.zshrc
+export PATH=$PATH:$(go env GOPATH)/bin
+
+echo "All tools installed successfully!"
+
+
+echo "Checking installations"
+
+gofmt --help
+goimports --help
+staticcheck --version
+gosec --version
+
+
+echo "Setting up hooks"
+
+cp scripts/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
