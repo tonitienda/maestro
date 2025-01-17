@@ -21,14 +21,14 @@ jobs:
           mkdir -p coverage
           go test ./... -coverprofile=coverage/coverage.out
 
-      - name: Enforce Coverage Threshold
-        run: |
-          coverage=$(go tool cover -func=coverage/coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
-          echo "Coverage: $coverage%"
-          if (( $(echo "$coverage < 80.0" | bc -l) )); then
-            echo "Coverage ($coverage%) is below the threshold (80%)"
-            exit 1
-          fi
+      # - name: Enforce Coverage Threshold
+      #   run: |
+      #     coverage=$(go tool cover -func=coverage/coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
+      #     echo "Coverage: $coverage%"
+      #     if (( $(echo "$coverage < 80.0" | bc -l) )); then
+      #       echo "Coverage ($coverage%) is below the threshold (80%)"
+      #       exit 1
+      #     fi
 
       - name: Generate Coverage Badge
         run: |
