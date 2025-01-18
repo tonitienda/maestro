@@ -1,10 +1,11 @@
 name: Unit Tests
+# run on push to main branch excluding changes to README.md
 on:
-  - push:
-      branches:
-        - main
-      paths:
-        - !README.md
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "README.md"
 
 jobs:
   unit-tests:
