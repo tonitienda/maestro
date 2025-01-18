@@ -40,35 +40,9 @@ jobs:
         run: |
           coverage=$(go tool cover -func=coverage/coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
           echo "Coverage: $coverage%"
-          echo "Calling https://img.shields.io/badge/Coverage-${coverage}%25-brightgreen"
-          curl -o coverage/badge.svg "https://img.shields.io/badge/Coverage-${coverage}%25-brightgreen"
-
-      - name: Upload Coverage and Badge
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: coverage/
-
-  update-readme:
-    needs: unit-tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Download Coverage Badge
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage
-          path: coverage
-
       - name: Update README.md
         run: |
-          git pull --prune
-          badge_svg=$(cat coverage/badge.svg | base64 | tr -d '\n')
-          echo "![Coverage](data:image/svg+xml;base64,$badge_svg)"
-          stats="<stats>![Coverage](data:image/svg+xml;base64,$badge_svg)</stats>"
-          sed -i '/<stats>/,/<\/stats>/c\'"$stats" README.md
+          go run scripts/update-readme.go -coverage $coverage -tests 1
 
       # Push changes to README.md
       - name: Commit and Push Badge Update
