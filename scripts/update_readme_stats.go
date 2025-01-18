@@ -79,7 +79,7 @@ func main() {
 	}
 
 	// Write the updated content back to the file
-	err = os.WriteFile(filePath, []byte(contentStr), 0644)
+	err = os.WriteFile(filePath, []byte(contentStr), 0600)
 	if err != nil {
 		fmt.Printf("Error writing file: %v\n", err)
 		os.Exit(1)
