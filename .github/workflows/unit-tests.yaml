@@ -65,8 +65,9 @@ jobs:
       - name: Update README.md
         run: |
           git pull --prune
-          badge_url=$(cat coverage/badge.svg | base64 | tr -d '\n')
-          sed -i '/## Coverage Badge/c\![Coverage](data:image/svg+xml;base64,'"$badge_url"')' README.md
+          badge_svg=$(cat coverage/badge.svg | base64 | tr -d '\n')
+          echo "![Coverage](data:image/svg+xml;base64,$badge_svg)"
+          sed -i '/## Coverage Badge/c\![Coverage](data:image/svg+xml;base64,'"$badge_svg"')' README.md
 
       # Push changes to README.md
       - name: Commit and Push Badge Update
