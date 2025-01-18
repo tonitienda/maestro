@@ -1,8 +1,10 @@
 name: Unit Tests
-on: 
-  - push
-    paths:
-      - !README.md
+on:
+  - push:
+      branches:
+        - main
+      paths:
+        - !README.md
 
 jobs:
   unit-tests:
