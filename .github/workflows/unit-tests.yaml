@@ -67,7 +67,7 @@ jobs:
           git pull --prune
           badge_svg=$(cat coverage/badge.svg | base64 | tr -d '\n')
           echo "![Coverage](data:image/svg+xml;base64,$badge_svg)"
-          starts="<stats>![Coverage](data:image/svg+xml;base64,'"$badge_svg"')</stats>"
+          stats="<stats>![Coverage](data:image/svg+xml;base64,$badge_svg)</stats>"
           sed -i '/<stats>/,/<\/stats>/c\'"$stats" README.md
 
       # Push changes to README.md
