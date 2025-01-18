@@ -1,6 +1,6 @@
 # maestro
 
-## Coverage Badge
+![Coverage](data:image/svg+xml;base64,)
 
 ![Coverage](data:image/svg+xml;base64,...)
 
