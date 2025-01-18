@@ -1,7 +1,8 @@
 name: Unit Tests
-on: push
-  paths:
-     - !Readme.md
+on: 
+  - push
+    paths:
+      - !README.md
 
 jobs:
   unit-tests:
